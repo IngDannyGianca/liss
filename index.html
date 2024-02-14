@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lisbeth</title>
+  <style>
+    body {
+  background-color: #000;
+  color: #555;
+  font-size: 1.1em;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  margin: 0;
+}
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.bubble {
+  position: absolute;
+  width: 10vw;
+  height: 10vw;
+  min-width: 70px;
+  min-height: 70px;
+  max-width: 150px;
+  max-height: 150px;
+  color: #3a8de0;
+  border-radius: 50%;
+}
+
+
+.bubble-dummy {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  border: .2em solid currentColor;
+  /**animation: bubbleUp 1200ms ease-out forwards;**/
+}
+
+@keyframes bubbleUp {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+
+.heart {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.heart path {
+  fill: #e27373;
+  stroke: none;
+}
+
+    button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  display: inline-block; /* Cambia el display a inline-block */
+}
+
+#btnYes {
+  background-color: red;
+  color: white;
+  margin-right: 10px; /* Agrega margen derecho para separar los botones */
+}
+
+#btnNo {
+  background-color: #3498db;
+  color: white;
+}
+
+    .heart-message {
+      width: 250px;
+      background-color: pink;
+      border-radius: 20px;
+      padding: 20px;
+      position: absolute;
+      left: 50%;
+      top: 65%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+    .heart {
+      color: red;
+    }
+    .special-message {
+  background-color: #ffcccc; /* Fondo rosa claro */
+  border: 2px solid #ff3366; /* Borde rosado */
+  padding: 30px;
+  font-size: 24px; /* Tamaño de fuente más grande */
+  border-radius: 20px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más amigable */
+  color: #ff3366; /* Color de texto rosado */
+  text-align: center; /* Centrar el texto horizontalmente */
+  width: 70%; /* Ancho del mensaje */
+  height: 50%;
+  max-width: 600px; /* Ancho máximo del mensaje */
+}
+
+
+    h1 {
+  text-align: center; /* Centra el texto horizontalmente */
+  color: white;
+    }
+    #btnYes, #btnNo {
+  display: block; /* Hace que los botones sean elementos de bloque */
+  margin: 0 auto; /* Establece los márgenes izquierdo y derecho automáticamente, lo que centrará los botones horizontalmente */
+}
+
+
+
+    .bubble, .bubble-dummy, .heart {
+  pointer-events: none; /* Evitar que los elementos del fondo bloqueen los clics */
+}
+  </style>
+</head>
+<body>
+  <h1>¿Lisbeth, quieres ser mi Valentín?</h1>
+  <button id="btnYes">¡Sí, quiero!</button><br>
+  <button id="btnNo">No, gracias</button>
+
+<br><br><br><br><br><br>
+  <div id="heartMessage" class="heart-message" style="display: none;">
+    <h2><span class="heart">❤️</span> Pollita de color: <span class="heart">❤️</span></h2>
+    <p class="message"></p>
+  </div>
+
+  <script>
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const heartMessage = document.getElementById('heartMessage');
+    let countYesClicks = 0;
+
+    btnYes.addEventListener('click', () => {
+      countYesClicks++;
+      if (countYesClicks <= 10) {
+        const confirmMessages = [
+          '¿Estás segura? No hay devoluciones',
+          'No hay vuelta atrás',
+          '¿Estás lista para cambiar a Mai por mi?',
+          '¿Estás segura de querer ser mi amor para siempre?',
+          '¿Estás segura de que este es tu último "Sí"?',
+          '¿Estás segura de querer ser mi Valentín?',
+          '¿Estás segura de querer compartir la mitad de mis chucherías?',
+          '¿Estás lista para enojarte conmigo mientras dormimos juntos?',
+          '¿Estás segura de tu decisión?'
+        ];
+        const randomIndex = Math.floor(Math.random() * confirmMessages.length);
+        showHeartMessage(confirmMessages[randomIndex]);
+      } else {
+        showSpecialMessage('¡Felicidades! Eres mi Valentín ahora. Te amo mucho.');
+        document.title = '¡TE AMO!';
+      }
+    });
+
+    btnNo.addEventListener('click', () => {
+      const buttonRect = btnNo.getBoundingClientRect();
+      const newX = Math.floor(Math.random() * (window.innerWidth - buttonRect.width));
+      const newY = Math.floor(Math.random() * (window.innerHeight - buttonRect.height));
+      btnNo.style.position = 'absolute';
+      btnNo.style.left = newX + 'px';
+      btnNo.style.top = newY + 'px';
+    });
+
+    function showHeartMessage(message) {
+      heartMessage.innerHTML = `
+        <h2><span class="heart">❤️</span> Pollita: <span class="heart">❤️</span></h2>
+        <p class="message">${message}</p>
+        <center><img src="1.gif" alt="Imagen de fondo" style="max-width: 40%; height: auto; margin-bottom: 20px;"></center>
+ 
+      `;
+      heartMessage.style.display = 'block';
+    }
+
+    function showSpecialMessage(message) {
+  const specialMessage = document.createElement('div');
+  specialMessage.classList.add('special-message');
+  specialMessage.innerHTML = `
+    <img src="a.jpg" alt="Imagen de fondo" style="max-width: 40%; height: auto; margin-bottom: 20px;">
+    <p>${message}</p>
+  `;
+  document.body.appendChild(specialMessage);
+}
+
+
+
+
+
+
+    (function() {
+  
+  
+  var ctx= new AudioContext();
+function createSound(size,fr, delay, type, vol) {
+ for(let i=0; i < size; i++) {
+ let osc= ctx.createOscillator(),
+        gain= ctx.createGain();
+        
+    setTimeout(function() {
+      osc.frequency.value= fr*i;
+      gain.gain.value= vol;
+      osc.type= type;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(function() {
+          console.log(osc.frequency.value);
+          let gVal= gain.gain.value,
+              smooth;
+          function reduceGain() {
+            gVal-=0.02;
+             if(gVal > 0) {
+              smooth= requestAnimationFrame(reduceGain);
+             } else {
+                osc.stop();
+                cancelAnimationFrame(smooth);
+             }
+               
+            
+            gain.gain.value= gVal/7;
+          }
+          reduceGain();
+          
+        
+    }, delay);
+        cir.classList.toggle("pop");
+     
+    }, i*delay); 
+    
+ }
+  
+}
+  
+  function getRandomColor() {
+  var colors= ["#456", "#890", "#634", "#299", "tomato", "#fb3"],
+  idx= Math.floor(colors.length*Math.random());
+  
+return (colors[idx]);
+  }
+
+  function animateIt(el, dur, delay) {
+    var animateEl= el.animate([
+          {
+            opacity: 0,
+           transform: "translate(-50%, -50%) scale(0)" 
+          },
+          
+          {
+            opacity: 1,
+            transform: "translate(-50%, -50%) scale(1)"
+          },
+          {
+            opacity: 0,
+            transform: "translate(-50%, -50%) scale(1.1)"
+          }
+          
+        ], 
+                                         {
+        duration: dur,
+        easing: "ease-out",
+        fill: "forwards",
+        delay: delay || 0
+        });
+    
+    return animateEl;
+  }
+  
+  
+  
+  function createBubble() {
+    var ns= "http://www.w3.org/2000/svg",
+        bubble= document.createElement("div"),
+        bubbleDummy= document.createElement("div"),
+        heart= document.createElementNS(ns, "svg"),
+        heartPath= document.createElementNS(ns, "path");
+    
+    heart.setAttribute("viewBox", "0 0 600 500")
+    heartPath.setAttribute("d", "M300,150 C500,10 600,300 300,400 C0,300 100,10 300,150");
+    bubble.classList.add("bubble");
+    bubble.style.color= getRandomColor();
+    bubbleDummy.classList.add("bubble-dummy");
+    heart.classList.add("heart");
+    
+    heart.appendChild(heartPath);
+    bubble.appendChild(bubbleDummy);
+    bubble.appendChild(heart);
+    
+    document.body.appendChild(bubble);
+    return {
+      setPosition: function(x,y) {
+          bubble.style.left= x +"px";
+        
+        bubble.style.top= y + "px";
+      },
+      _animate: function() {
+        var animateBubble= animateIt(bubbleDummy, 1200),
+            animateHeart= animateIt(heart, 2000);  
+        
+        console.log(animateBubble)
+        
+        return {
+          bubbleDur: 1200,
+          heartDur: 2000
+        }
+      },
+      remove: function(el) {
+        bubble.remove();
+      }
+    }
+  }
+  
+  
+  document.body.addEventListener("click", handleDown, false);
+  document.body.addEventListener("touchstart", handleDown, false);
+  
+  function handleDown(e) {
+      var _x= e.pageX,
+      _y= e.pageY; 
+    
+    var bubble= createBubble();
+    
+    bubble.setPosition(_x, _y);
+   var animation= bubble._animate(),
+       totalDelay= animation.bubbleDur+ animation.heartDur;
+    if(e.type) {
+    //createSound(20,5000,1,"sawtooth",1);
+    }
+    setTimeout(()=> {
+      bubble.remove();
+      console.log("removed");
+    }, totalDelay);
+    
+    console.log(animation);
+  }
+  
+  var w= document.body.clientWidth,
+      h= document.body.clientHeight;
+  
+  function bubbleUp() {
+    var de= {
+      pageX: Math.random()*w,
+      pageY: Math.random()*h
+    }
+    
+    handleDown(de);
+    
+    bblUp= setTimeout(bubbleUp, 200);
+      
+  }
+ bubbleUp();
+  
+  window.addEventListener("resize", function() {
+    w= document.body.clientWidth,
+      h= document.body.clientHeight;
+  }, false);
+})();
+  </script>
+</body>
+</html>
